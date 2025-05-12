@@ -1,6 +1,8 @@
 class Api::TasksController < ApplicationController
   def index
-    render json: [], status: :ok
+    tasks = Task.select(:id, :title, :description, :completed_at)
+
+    render json: tasks, status: :ok
   end
 
   def create
