@@ -7,7 +7,7 @@ RSpec.describe "Tasks API", swagger_doc: "v1/swagger.yaml", type: :request do
       produces "application/json"
 
       response "200", "Tasks list" do
-        schema type: :array, items: { type: :object }
+        schema type: :array, items: {type: :object}
         run_test! do |response|
           expect(response).to have_http_status(:ok)
         end
@@ -25,24 +25,24 @@ RSpec.describe "Tasks API", swagger_doc: "v1/swagger.yaml", type: :request do
           task: {
             type: :object,
             properties: {
-              title: { type: :string, example: "Test" }
+              title: {type: :string, example: "Test"}
             },
-            required: [ "title" ]
+            required: ["title"]
           }
         },
-        required: [ "task" ]
+        required: ["task"]
       }
 
       response "201", "Task created" do
-        let(:task) { { task: { title: "Test" } } }
+        let(:task) { {task: {title: "Test"}} }
         schema type: :object,
           properties: {
-            id: { type: :integer },
-            title: { type: :string },
-            created_at: { type: :string, format: "date-time" },
-            updated_at: { type: :string, format: "date-time" }
+            id: {type: :integer},
+            title: {type: :string},
+            created_at: {type: :string, format: "date-time"},
+            updated_at: {type: :string, format: "date-time"}
           },
-          required: [ "id", "title", "created_at", "updated_at" ]
+          required: ["id", "title", "created_at", "updated_at"]
 
         run_test! do |response|
           data = JSON.parse(response.body)
@@ -52,12 +52,12 @@ RSpec.describe "Tasks API", swagger_doc: "v1/swagger.yaml", type: :request do
       end
 
       response "422", "Invalid request" do
-        let(:task) { { task: { title: nil } } }
+        let(:task) { {task: {title: nil}} }
         schema type: :object,
           properties: {
-            errors: { type: :array, items: { type: :string } }
+            errors: {type: :array, items: {type: :string}}
           },
-          required: [ "errors" ]
+          required: ["errors"]
 
         run_test! do |response|
           data = JSON.parse(response.body)
@@ -80,11 +80,11 @@ RSpec.describe "Tasks API", swagger_doc: "v1/swagger.yaml", type: :request do
 
         schema type: :object,
           properties: {
-            id: { type: :integer },
-            title: { type: :string },
-            description: { type: :string, nullable: true }
+            id: {type: :integer},
+            title: {type: :string},
+            description: {type: :string, nullable: true}
           },
-          required: [ "id", "title" ]
+          required: ["id", "title"]
 
         run_test! do |response|
           data = JSON.parse(response.body)
@@ -97,9 +97,9 @@ RSpec.describe "Tasks API", swagger_doc: "v1/swagger.yaml", type: :request do
         let(:id) { 0 } # Non-existent ID
         schema type: :object,
           properties: {
-            error: { type: :string }
+            error: {type: :string}
           },
-          required: [ "error" ]
+          required: ["error"]
 
         run_test! do |response|
           expect(response).to have_http_status(:not_found)
