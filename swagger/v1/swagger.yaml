@@ -75,6 +75,47 @@ paths:
                   - title
               required:
               - task
+  "/api/tasks/{id}/completed":
+    patch:
+      summary: Marks a task as completed
+      tags:
+      - Tasks
+      parameters:
+      - name: id
+        in: path
+        description: Task ID
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Task marked as completed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  title:
+                    type: string
+                  description:
+                    type: string
+                    nullable: true
+                required:
+                - id
+                - title
+        '404':
+          description: Task not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
 servers:
 - url: http://{defaultHost}
   variables:

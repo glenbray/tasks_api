@@ -12,43 +12,63 @@ RSpec.describe "Tasks API", type: :request do
     context "with valid parameters" do
       let(:valid_attributes) { {task: {title: "Test"}} }
 
-      it "creates a new Task" do
+      it "creates a task and returns it with status 201" do
         expect {
           post "/api/tasks", params: valid_attributes, as: :json
         }.to change(Task, :count).by(1)
-      end
 
-      it "returns a created status" do
-        post "/api/tasks", params: valid_attributes, as: :json
         expect(response).to have_http_status(:created)
-      end
 
-      it "returns the created task" do
-        post "/api/tasks", params: valid_attributes, as: :json
         json_response = JSON.parse(response.body)
         expect(json_response["title"]).to eq("Test")
         expect(json_response["id"]).to be_present
+        expect(json_response["created_at"]).to be_present
+        expect(json_response["updated_at"]).to be_present
       end
     end
 
     context "with invalid parameters" do
       let(:invalid_attributes) { {task: {title: nil}} }
 
-      it "does not create a new Task" do
+      it "does not create a task and returns status 422 with errors" do
         expect {
           post "/api/tasks", params: invalid_attributes, as: :json
         }.to change(Task, :count).by(0)
-      end
 
-      it "returns an unprocessable entity status" do
-        post "/api/tasks", params: invalid_attributes, as: :json
         expect(response).to have_http_status(:unprocessable_entity)
-      end
 
-      it "returns a JSON response with errors" do
-        post "/api/tasks", params: invalid_attributes, as: :json
         json_response = JSON.parse(response.body)
         expect(json_response["errors"]).to include("Title can't be blank")
+      end
+    end
+  end
+
+  describe "PATCH /api/tasks/:id/completed" do
+    let!(:task) { Task.create!(title: "Complete the task") }
+
+    context "when the task exists" do
+      it "marks the task as completed and returns it" do
+        expect {
+          patch "/api/tasks/#{task.id}/completed", as: :json
+        }.to change { task.reload.completed_at }.from(nil)
+
+        expect(response).to have_http_status(:ok)
+        expect(task.completed_at).to be_within(1.second).of(Time.current)
+
+        json_response = JSON.parse(response.body)
+        expect(json_response["id"]).to eq(task.id)
+        expect(json_response["completed_at"]).to be_present
+      end
+    end
+
+    context "when the task does not exist" do
+      it "returns a not found status and error message" do
+        patch "/api/tasks/0/completed", as: :json
+
+        expect(response).to have_http_status(:not_found)
+
+        json_response = JSON.parse(response.body)
+        expect(json_response["error"]).to match(/Task not found/)
       end
     end
   end

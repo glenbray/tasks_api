@@ -9,6 +9,10 @@ Rails.application.routes.draw do
   mount Rswag::Api::Engine => "/api-docs"
 
   namespace :api do
-    resources :tasks, only: [:index, :create]
+    resources :tasks, only: [:index, :create] do
+      member do
+        patch :completed # Adds PATCH /api/tasks/:id/completed
+      end
+    end
   end
 end
