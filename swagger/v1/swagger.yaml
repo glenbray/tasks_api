@@ -35,17 +35,16 @@ paths:
                     type: integer
                   title:
                     type: string
-                  created_at:
+                  description:
+                    type: string
+                    nullable: true
+                  completed_at:
                     type: string
                     format: date-time
-                  updated_at:
-                    type: string
-                    format: date-time
+                    nullable: true
                 required:
                 - id
                 - title
-                - created_at
-                - updated_at
         '422':
           description: Invalid request
           content:

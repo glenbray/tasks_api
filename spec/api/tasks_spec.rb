@@ -39,15 +39,17 @@ RSpec.describe "Tasks API", swagger_doc: "v1/swagger.yaml", type: :request do
           properties: {
             id: {type: :integer},
             title: {type: :string},
-            created_at: {type: :string, format: "date-time"},
-            updated_at: {type: :string, format: "date-time"}
+            description: {type: :string, nullable: true},
+            completed_at: {type: :string, format: "date-time", nullable: true}
           },
-          required: ["id", "title", "created_at", "updated_at"]
+          required: ["id", "title"]
 
         run_test! do |response|
           data = JSON.parse(response.body)
           expect(data["title"]).to eq "Test"
           expect(response).to have_http_status(:created)
+          expect(data).not_to have_key("created_at")
+          expect(data).not_to have_key("updated_at")
         end
       end
 
@@ -94,7 +96,7 @@ RSpec.describe "Tasks API", swagger_doc: "v1/swagger.yaml", type: :request do
       end
 
       response "404", "Task not found" do
-        let(:id) { 0 } # Non-existent ID
+        let(:id) { 0 }
         schema type: :object,
           properties: {
             error: {type: :string}

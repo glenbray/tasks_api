@@ -20,10 +20,8 @@ RSpec.describe "Tasks API", type: :request do
         expect(response).to have_http_status(:created)
 
         json_response = JSON.parse(response.body)
-        expect(json_response["title"]).to eq("Test")
         expect(json_response["id"]).to be_present
-        expect(json_response["created_at"]).to be_present
-        expect(json_response["updated_at"]).to be_present
+        expect(json_response["title"]).to eq("Test")
       end
     end
 
