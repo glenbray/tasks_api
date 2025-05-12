@@ -1,5 +1,7 @@
 # Tasks API
 
+[![CI](https://github.com/glenbray/tasks_api/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/glenbray/tasks_api/actions/workflows/ci.yml)
+
 ## Setup
 
 Install dependencies:
